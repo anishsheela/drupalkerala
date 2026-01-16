@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drupal 25th Anniversary - Kochi - Financial Transparency</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script>
+        const { useState } = React;
+        
+        const ChevronDown = () => React.createElement('svg', {
+            width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none',
+            stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round'
+        }, React.createElement('polyline', { points: '6 9 12 15 18 9' }));
+        
+        const ChevronUp = () => React.createElement('svg', {
+            width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none',
+            stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round'
+        }, React.createElement('polyline', { points: '18 15 12 9 6 15' }));
+        
+        const FileText = ({ size = 24 }) => React.createElement('svg', {
+            width: size, height: size, viewBox: '0 0 24 24', fill: 'none',
+            stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round'
+        }, 
+            React.createElement('path', { d: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' }),
+            React.createElement('polyline', { points: '14 2 14 8 20 8' }),
+            React.createElement('line', { x1: 16, y1: 13, x2: 8, y2: 13 }),
+            React.createElement('line', { x1: 16, y1: 17, x2: 8, y2: 17 }),
+            React.createElement('polyline', { points: '10 9 9 9 8 9' })
+        );
+        
+        const X = ({ size = 24 }) => React.createElement('svg', {
+            width: size, height: size, viewBox: '0 0 24 24', fill: 'none',
+            stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round'
+        }, 
+            React.createElement('line', { x1: 18, y1: 6, x2: 6, y2: 18 }),
+            React.createElement('line', { x1: 6, y1: 6, x2: 18, y2: 18 })
+        );
+        
+        const Home = ({ size = 24 }) => React.createElement('svg', {
+            width: size, height: size, viewBox: '0 0 24 24', fill: 'none',
+            stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round'
+        },
+            React.createElement('path', { d: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }),
+            React.createElement('polyline', { points: '9 22 9 12 15 12 15 22' })
+        );
+
+        const EventTransparency = () => {
+            const [expandedSections, setExpandedSections] = useState({
+                income: true,
+                expenses: true,
+                summary: true
+            });
+            const [lightboxImage, setLightboxImage] = useState(null);
+
+            const toggleSection = (section) => {
+                setExpandedSections(prev => ({
+                    ...prev,
+                    [section]: !prev[section]
+                }));
+            };
+
+            const income = [
+                { source: 'Factorial GmbH', amount: 2820, status: 'pending', note: 'Full expense reimbursement', receipt: null }
+            ];
+
+            const expenses = [
+                { item: 'Cake', amount: 1650, bill: 'cake.pdf' },
+                { item: 'Food', amount: 565, bill: 'food.jpeg' },
+                { item: 'Plates, Cutlery and Drinks', amount: 605, bill: 'plates_cutlery_drinks.jpeg' }
+            ];
+
+            const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+            const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
+            const balance = totalIncome - totalExpenses;
+            const fundsReceived = income.filter(i => i.status === 'received').reduce((sum, i) => sum + i.amount, 0);
+            const pendingFunds = income.filter(i => i.status === 'pending').reduce((sum, i) => sum + i.amount, 0);
+            const outOfPocket = totalExpenses - fundsReceived;
+
+            const openBill = (filename) => {
+                setLightboxImage(`./bills/${filename}`);
+            };
+
+            const openReceipt = (filename) => {
+                setLightboxImage(`./receipts/${filename}`);
+            };
+
+            const closeLightbox = () => {
+                setLightboxImage(null);
+            };
+
+            return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-8 px-4' },
+                React.createElement('div', { className: 'max-w-4xl mx-auto' },
+                    
+                    // Back to Home Button
+                    React.createElement('div', { className: 'mb-6' },
+                        React.createElement('a', {
+                            href: '/',
+                            className: 'inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors'
+                        },
+                            React.createElement(Home, { size: 20 }),
+                            'Back to Home'
+                        )
+                    ),
+                    
+                    // Header
+                    React.createElement('div', { className: 'bg-white rounded-lg shadow-lg p-8 mb-6' },
+                        React.createElement('h1', { className: 'text-3xl font-bold text-gray-800 mb-2' }, 'Drupal 25th Anniversary - Kochi'),
+                        React.createElement('p', { className: 'text-gray-600 mb-4' }, 'Financial Transparency Report'),
+                        React.createElement('div', { className: 'flex items-center gap-2 text-sm text-gray-500' },
+                            React.createElement('span', null, 'Event Date: January 15, 2026'),
+                            React.createElement('span', null, '•'),
+                            React.createElement('span', null, 'Kochi, Kerala, IN')
+                        )
+                    ),
+
+                    // Summary Cards
+                    React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6' },
+                        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+                            React.createElement('div', { className: 'text-sm text-gray-600 mb-1' }, 'Total Income'),
+                            React.createElement('div', { className: 'text-2xl font-bold text-green-600' }, `₹${totalIncome.toLocaleString()}`)
+                        ),
+                        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+                            React.createElement('div', { className: 'text-sm text-gray-600 mb-1' }, 'Total Expenses'),
+                            React.createElement('div', { className: 'text-2xl font-bold text-red-600' }, `₹${totalExpenses.toLocaleString()}`)
+                        ),
+                        React.createElement('div', { className: 'bg-white rounded-lg shadow p-6' },
+                            React.createElement('div', { className: 'text-sm text-gray-600 mb-1' }, 'Balance'),
+                            React.createElement('div', { className: 'text-2xl font-bold text-blue-600' }, `₹${balance.toLocaleString()}`)
+                        )
+                    ),
+
+                    // Income Section
+                    React.createElement('div', { className: 'bg-white rounded-lg shadow-lg mb-6' },
+                        React.createElement('button', {
+                            onClick: () => toggleSection('income'),
+                            className: 'w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors'
+                        },
+                            React.createElement('h2', { className: 'text-2xl font-bold text-gray-800' }, 'Income'),
+                            expandedSections.income ? React.createElement(ChevronUp) : React.createElement(ChevronDown)
+                        ),
+                        expandedSections.income && React.createElement('div', { className: 'px-6 pb-6' },
+                            React.createElement('div', { className: 'space-y-3' },
+                                income.map((item, index) =>
+                                    React.createElement('div', { key: index, className: 'flex items-center justify-between p-4 bg-gray-50 rounded-lg' },
+                                        React.createElement('div', { className: 'flex-1' },
+                                            React.createElement('div', { className: 'font-semibold text-gray-800' }, item.source),
+                                            item.note && React.createElement('div', { className: 'text-sm text-gray-500' }, item.note)
+                                        ),
+                                        React.createElement('div', { className: 'flex items-center gap-4' },
+                                            React.createElement('span', { className: 'font-bold text-gray-800' }, `₹${item.amount.toLocaleString()}`),
+                                            React.createElement('div', { className: 'flex items-center gap-2' },
+                                                React.createElement('span', {
+                                                    className: `px-3 py-1 rounded-full text-sm font-medium ${item.status === 'received' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`
+                                                }, item.status),
+                                                item.receipt ?
+                                                    React.createElement('button', {
+                                                        onClick: () => openReceipt(item.receipt),
+                                                        className: 'flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium'
+                                                    },
+                                                        React.createElement(FileText, { size: 16 }),
+                                                        'View Receipt'
+                                                    ) :
+                                                    React.createElement('span', { className: 'px-3 py-1 bg-gray-200 text-gray-500 rounded-lg text-sm font-medium' }, 'No Receipt')
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement('div', { className: 'mt-4 pt-4 border-t border-gray-200 flex justify-between items-center' },
+                                React.createElement('span', { className: 'text-lg font-semibold text-gray-700' }, 'Total Income'),
+                                React.createElement('span', { className: 'text-xl font-bold text-green-600' }, `₹${totalIncome.toLocaleString()}`)
+                            )
+                        )
+                    ),
+
+                    // Expenses Section
+                    React.createElement('div', { className: 'bg-white rounded-lg shadow-lg mb-6' },
+                        React.createElement('button', {
+                            onClick: () => toggleSection('expenses'),
+                            className: 'w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors'
+                        },
+                            React.createElement('h2', { className: 'text-2xl font-bold text-gray-800' }, 'Expenses'),
+                            expandedSections.expenses ? React.createElement(ChevronUp) : React.createElement(ChevronDown)
+                        ),
+                        expandedSections.expenses && React.createElement('div', { className: 'px-6 pb-6' },
+                            React.createElement('div', { className: 'space-y-3' },
+                                expenses.map((item, index) =>
+                                    React.createElement('div', { key: index, className: 'flex items-center justify-between p-4 bg-gray-50 rounded-lg' },
+                                        React.createElement('div', { className: 'flex-1' },
+                                            React.createElement('div', { className: 'font-semibold text-gray-800' }, item.item),
+                                            item.note && React.createElement('div', { className: 'text-sm text-gray-500' }, item.note)
+                                        ),
+                                        React.createElement('div', { className: 'flex items-center gap-4' },
+                                            React.createElement('span', { className: 'font-bold text-gray-800' }, `₹${item.amount.toLocaleString()}`),
+                                            item.bill ?
+                                                React.createElement('button', {
+                                                    onClick: () => openBill(item.bill),
+                                                    className: 'flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium'
+                                                },
+                                                    React.createElement(FileText, { size: 16 }),
+                                                    'View Bill'
+                                                ) :
+                                                React.createElement('span', { className: 'px-3 py-1 bg-gray-200 text-gray-500 rounded-lg text-sm font-medium' }, 'No Bill')
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement('div', { className: 'mt-4 pt-4 border-t border-gray-200 flex justify-between items-center' },
+                                React.createElement('span', { className: 'text-lg font-semibold text-gray-700' }, 'Total Expenses'),
+                                React.createElement('span', { className: 'text-xl font-bold text-red-600' }, `₹${totalExpenses.toLocaleString()}`)
+                            )
+                        )
+                    ),
+
+                    // Financial Summary
+                    React.createElement('div', { className: 'bg-white rounded-lg shadow-lg mb-6' },
+                        React.createElement('button', {
+                            onClick: () => toggleSection('summary'),
+                            className: 'w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors'
+                        },
+                            React.createElement('h2', { className: 'text-2xl font-bold text-gray-800' }, 'Current Financial Status'),
+                            expandedSections.summary ? React.createElement(ChevronUp) : React.createElement(ChevronDown)
+                        ),
+                        expandedSections.summary && React.createElement('div', { className: 'px-6 pb-6' },
+                            React.createElement('div', { className: 'space-y-4' },
+                                React.createElement('div', { className: 'flex justify-between items-center p-4 bg-green-50 rounded-lg' },
+                                    React.createElement('span', { className: 'text-gray-700' }, 'Funds Received'),
+                                    React.createElement('span', { className: 'font-bold text-green-700' }, `₹${fundsReceived.toLocaleString()}`)
+                                ),
+                                React.createElement('div', { className: 'flex justify-between items-center p-4 bg-red-50 rounded-lg' },
+                                    React.createElement('span', { className: 'text-gray-700' }, 'Out of Pocket (Until Pending Funds Arrive)'),
+                                    React.createElement('span', { className: 'font-bold text-red-700' }, `₹${outOfPocket.toLocaleString()}`)
+                                ),
+                                React.createElement('div', { className: 'flex justify-between items-center p-4 bg-yellow-50 rounded-lg' },
+                                    React.createElement('span', { className: 'text-gray-700' }, 'Pending to Receive'),
+                                    React.createElement('span', { className: 'font-bold text-yellow-700' }, `₹${pendingFunds.toLocaleString()}`)
+                                ),
+                                React.createElement('div', { className: 'flex justify-between items-center p-4 bg-blue-50 rounded-lg border-2 border-blue-200' },
+                                    React.createElement('span', { className: 'text-gray-700 font-semibold' }, 'Final Balance (After All Settlements)'),
+                                    React.createElement('span', { className: 'font-bold text-blue-700 text-lg' }, `₹${balance.toLocaleString()}`)
+                                )
+                            ),
+                            React.createElement('div', { className: 'mt-6 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500' },
+                                React.createElement('h3', { className: 'font-semibold text-gray-800 mb-2' }, 'About This Event'),
+                                React.createElement('p', { className: 'text-gray-700 text-sm' },
+                                    'The Kochi celebration of Drupal\'s 25th anniversary was organized by the Drupal Kochi community. The entire expense is being reimbursed by Factorial GmbH, making this a zero-cost celebration for the community.'
+                                )
+                            )
+                        )
+                    ),
+
+                    // Footer
+                    React.createElement('div', { className: 'bg-white rounded-lg shadow-lg p-6 text-center text-gray-600' },
+                        React.createElement('p', { className: 'mb-2' }, 'This transparency report is published in the spirit of community accountability.'),
+                        React.createElement('p', { className: 'text-sm' }, 'All bills are available for verification. Click "View Bill" to see the supporting documents.'),
+                        React.createElement('p', { className: 'text-sm mt-4 text-gray-500' }, `Published: ${new Date().toLocaleDateString()}`)
+                    )
+                ),
+
+                // Lightbox
+                lightboxImage && React.createElement('div', {
+                    className: 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4',
+                    onClick: closeLightbox
+                },
+                    React.createElement('button', {
+                        onClick: closeLightbox,
+                        className: 'absolute top-4 right-4 text-white hover:text-gray-300 transition-colors'
+                    }, React.createElement(X, { size: 32 })),
+                    React.createElement('div', { className: 'max-w-6xl max-h-full overflow-auto' },
+                        React.createElement('iframe', {
+                            src: lightboxImage,
+                            className: 'w-full h-screen bg-white',
+                            title: 'Bill Document',
+                            onClick: (e) => e.stopPropagation()
+                        })
+                    )
+                )
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(EventTransparency));
+    </script>
+</body>
+</html>
